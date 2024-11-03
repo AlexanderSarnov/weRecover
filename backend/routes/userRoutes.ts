@@ -1,9 +1,12 @@
-import { Router } from 'express';
-import { createUser, getUsers } from '../controllers/userController';
+import express, { Request, Response } from 'express';
+import { registerUser, loginUser } from '../controllers/userController';
 
-const router = Router();
+const router = express.Router();
 
-router.post('/users', createUser);
-router.get('/users', getUsers);
+// User registration route
+router.post('/register', (req: Request, res: Response) => registerUser(req, res));
+
+// User login route
+router.post('/login', (req: Request, res: Response) => loginUser(req, res));
 
 export default router;
