@@ -1,18 +1,21 @@
-import { Router } from 'express';
-import { createStep, getSteps, updateStep, deleteStep } from '../controllers/stepController';
+import express from 'express';
+import { getSteps } from '../controllers/steps/getStepsController';
+import { addStep } from '../controllers/steps/addStepController';
+import { updateStep } from '../controllers/steps/updateStepController';
+import { deleteStep } from '../controllers/steps/deleteStepController';
+import { getStepProgress } from '../controllers/steps/getStepProgressController';
+import { addStepProgress } from '../controllers/steps/addStepProgressController';
+import { updateStepProgress } from '../controllers/steps/updateStepProgressController';
+import { authenticateToken } from '../middleware/authMiddleware';
 
-const router = Router();
+const router = express.Router();
 
-// Route to create a new recovery step
-router.post('/steps', createStep);
-
-// Route to get all recovery steps for a user with pagination
-router.get('/steps/:userId', getSteps);
-
-// Route to update a recovery step
-router.put('/steps/:stepId', updateStep);
-
-// Route to delete a recovery step
-router.delete('/steps/:stepId', deleteStep);
+router.get('/', authenticateToken, getSteps);
+router.post('/', authenticateToken, addStep);
+router.put('/:step_id', authenticateToken, updateStep);
+router.delete('/:step_id', authenticateToken, deleteStep);
+router.get('/:step_id/progress', authenticateToken, getStepProgress);
+router.post('/:step_id/progress', authenticateToken, addStepProgress);
+router.put('/:step_id/progress/:progress_id', authenticateToken, updateStepProgress);
 
 export default router;
