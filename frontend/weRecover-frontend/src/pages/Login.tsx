@@ -15,7 +15,12 @@ const Login: React.FC = () => {
                 password,
             });
             console.log('Login successful:', response.data);
-            navigate('/dashboard'); // Redirect to the dashboard
+
+            // Store JWT token in local storage
+            localStorage.setItem('token', response.data.token);
+
+            // Redirect to the dashboard
+            navigate('/dashboard');
         } catch (err: any) {
             console.error('Error during login:', err.response ? err.response.data : err.message);
         }

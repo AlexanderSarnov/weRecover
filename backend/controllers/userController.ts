@@ -35,9 +35,10 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         console.log('Password hashed:', hashedPassword);
 
         console.log('Inserting user into database');
+        const currentTime = new Date().toISOString();
         const result = await pool.query(
-            'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
-            [username, email, hashedPassword]
+            'INSERT INTO users (username, email, password, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [username, email, hashedPassword, currentTime, currentTime]
         );
         const newUser = result.rows[0];
         console.log('User inserted:', newUser);

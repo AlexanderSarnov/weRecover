@@ -1,0 +1,63 @@
+                                                                       Table "public.answers"
+   Column    |            Type             | Collation | Nullable |                  Default                   | Storage  | Compression | Stats target | Description 
+-------------+-----------------------------+-----------+----------+--------------------------------------------+----------+-------------+--------------+-------------
+ answer_id   | integer                     |           | not null | nextval('answers_answer_id_seq'::regclass) | plain    |             |              | 
+ question_id | integer                     |           |          |                                            | plain    |             |              | 
+ user_id     | integer                     |           |          |                                            | plain    |             |              | 
+ answer_text | text                        |           | not null |                                            | extended |             |              | 
+ created_at  | timestamp without time zone |           |          | CURRENT_TIMESTAMP                          | plain    |             |              | 
+ updated_at  | timestamp without time zone |           |          | CURRENT_TIMESTAMP                          | plain    |             |              | 
+Indexes:
+    "answers_pkey" PRIMARY KEY, btree (answer_id)
+Foreign-key constraints:
+    "answers_question_id_fkey" FOREIGN KEY (question_id) REFERENCES questions(question_id)
+    "answers_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(user_id)
+Access method: heap
+
+                                                               Table "public.questions"
+    Column     |  Type   | Collation | Nullable |                    Default                     | Storage  | Compression | Stats target | Description 
+---------------+---------+-----------+----------+------------------------------------------------+----------+-------------+--------------+-------------
+ question_id   | integer |           | not null | nextval('questions_question_id_seq'::regclass) | plain    |             |              | 
+ step_id       | integer |           |          |                                                | plain    |             |              | 
+ question_text | text    |           | not null |                                                | extended |             |              | 
+ is_custom     | boolean |           |          | false                                          | plain    |             |              | 
+ user_id       | integer |           |          |                                                | plain    |             |              | 
+ is_flagged    | boolean |           |          | false                                          | plain    |             |              | 
+Indexes:
+    "questions_pkey" PRIMARY KEY, btree (question_id)
+Foreign-key constraints:
+    "questions_step_id_fkey" FOREIGN KEY (step_id) REFERENCES steps(step_id)
+    "questions_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(user_id)
+Referenced by:
+    TABLE "answers" CONSTRAINT "answers_question_id_fkey" FOREIGN KEY (question_id) REFERENCES questions(question_id)
+Access method: heap
+
+                                                                        Table "public.step_progress"
+   Column    |            Type             | Collation | Nullable |                      Default                       | Storage  | Compression | Stats target | Description 
+-------------+-----------------------------+-----------+----------+----------------------------------------------------+----------+-------------+--------------+-------------
+ progress_id | integer                     |           | not null | nextval('step_progress_progress_id_seq'::regclass) | plain    |             |              | 
+ user_id     | integer                     |           |          |                                                    | plain    |             |              | 
+ step_id     | integer                     |           |          |                                                    | plain    |             |              | 
+ status      | character varying(20)       |           |          | 'Not Started'::character varying                   | extended |             |              | 
+ updated_at  | timestamp without time zone |           |          | CURRENT_TIMESTAMP                                  | plain    |             |              | 
+Indexes:
+    "step_progress_pkey" PRIMARY KEY, btree (progress_id)
+Foreign-key constraints:
+    "step_progress_step_id_fkey" FOREIGN KEY (step_id) REFERENCES steps(step_id)
+    "step_progress_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(user_id)
+Access method: heap
+
+                                                                    Table "public.steps"
+   Column    |          Type          | Collation | Nullable |                Default                 | Storage  | Compression | Stats target | Description 
+-------------+------------------------+-----------+----------+----------------------------------------+----------+-------------+--------------+-------------
+ step_id     | integer                |           | not null | nextval('steps_step_id_seq'::regclass) | plain    |             |              | 
+ step_number | integer                |           | not null |                                        | plain    |             |              | 
+ step_name   | character varying(100) |           | not null |                                        | extended |             |              | 
+ description | text                   |           |          |                                        | extended |             |              | 
+Indexes:
+    "steps_pkey" PRIMARY KEY, btree (step_id)
+Referenced by:
+    TABLE "questions" CONSTRAINT "questions_step_id_fkey" FOREIGN KEY (step_id) REFERENCES steps(step_id)
+    TABLE "step_progress" CONSTRAINT "step_progress_step_id_fkey" FOREIGN KEY (step_id) REFERENCES steps(step_id)
+Access method: heap
+
