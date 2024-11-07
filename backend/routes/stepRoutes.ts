@@ -1,21 +1,19 @@
 import express from 'express';
-import { getSteps } from '../controllers/steps/getStepsController';
-import { addStep } from '../controllers/steps/addStepController';
-import { updateStep } from '../controllers/steps/updateStepController';
-import { deleteStep } from '../controllers/steps/deleteStepController';
-import { getStepProgress } from '../controllers/steps/getStepProgressController';
-import { addStepProgress } from '../controllers/steps/addStepProgressController';
-import { updateStepProgress } from '../controllers/steps/updateStepProgressController';
+import {
+    getSteps,
+    getStepDetails,
+    getStepProgress,
+    handleStepProgress,
+    getAllStepsProgress,
+} from '../controllers/stepController'; // Import the combined controller
 import { authenticateToken } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
-router.get('/', authenticateToken, getSteps);
-router.post('/', authenticateToken, addStep);
-router.put('/:step_id', authenticateToken, updateStep);
-router.delete('/:step_id', authenticateToken, deleteStep);
-router.get('/:step_id/progress', authenticateToken, getStepProgress);
-router.post('/:step_id/progress', authenticateToken, addStepProgress);
-router.put('/:step_id/progress/:progress_id', authenticateToken, updateStepProgress);
+router.get('/', authenticateToken, getSteps); // Get all steps
+router.get('/:step_id', authenticateToken, getStepDetails); // Get step details
+router.get('/:step_id/progress', authenticateToken, getStepProgress); // Get step progress
+router.put('/:step_id/progress', authenticateToken, handleStepProgress); // Add or update step progress
+router.get('/progress/all', authenticateToken, getAllStepsProgress); // Get all steps progress for the authenticated user
 
 export default router;

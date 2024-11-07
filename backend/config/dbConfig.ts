@@ -10,8 +10,8 @@ const pool = new Pool({
     password: process.env.PGPASSWORD,
     port: parseInt(process.env.PGPORT || '5432'),
     max: 20, // Set the maximum number of clients in the pool
-    idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-    connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+    idleTimeoutMillis: 1800000, // Close idle clients after 30 minutes
+    connectionTimeoutMillis: 1800000, // Return an error after 30 minutes if connection could not be established
     ssl: {
         rejectUnauthorized: false, // Allow self-signed certificates
     },

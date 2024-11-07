@@ -1,19 +1,30 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
-import userRoutes from './routes/userRoutes';
-import testRoutes from './routes/testRoutes';
+import morgan from 'morgan'; // Import morgan for logging
+import { authenticateToken } from './middleware/authMiddleware';
 import stepRoutes from './routes/stepRoutes';
+import userRoutes from './routes/userRoutes';
 
-const port = process.env.PORT || 3000;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-const server = express();
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(morgan('combined')); // Use morgan for logging
 
-server.use(cors());
-server.use(express.json());
-server.use('/api/users', userRoutes);
-server.use('/api/test', testRoutes);
-server.use('/api/steps', stepRoutes);
+// Routes
+app.use('/api/steps', authenticateToken, stepRoutes);
+app.use('/api/auth', userRoutes);
 
-server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

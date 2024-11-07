@@ -8,16 +8,27 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 
     try {
+        console.log('Login attempt:', { email }); // Log the login attempt
+
         const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         const user = result.rows[0];
 
-        if (!user || !(await bcrypt.compare(password, user.password))) {
+        if (!user) {
+            console.log('User not found');
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            console.log('Invalid password');
             res.status(401).json({ message: 'Invalid credentials' });
             return;
         }
 
         const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
 
+        console.log('Login successful:', { email: user.email }); // Log successful login
         res.status(200).json({ token, user });
     } catch (err) {
         console.error('Error logging in user', err);
