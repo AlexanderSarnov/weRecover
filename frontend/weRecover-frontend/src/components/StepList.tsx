@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface Step {
     step_id: number;
@@ -10,37 +12,26 @@ interface Step {
 const StepList = () => {
     const [steps, setSteps] = useState<Step[]>([]);
     const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (token) {
-            console.log('Token:', token); // Log the token for debugging
-
-            // Fetch steps data from the API with the token
             fetch('http://localhost:3000/api/steps', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             })
-                .then((response) => {
-                    console.log('Response status:', response.status); // Log the response status
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log('Fetched steps data:', data); // Log the fetched data
-                    if (Array.isArray(data)) {
-                        setSteps(data);
-                    } else {
-                        throw new Error('Data is not an array');
-                    }
-                })
+                .then((response) => response.json())
+                .then((data) => setSteps(data))
                 .catch((error) => console.error('Error fetching steps:', error));
         } else {
             console.error('No token found');
         }
     }, [token]);
+
+    const handleStepClick = (step_id: number) => {
+        navigate(`/step/${step_id}`);
+    };
 
     return (
         <div className="step-list">
@@ -50,6 +41,7 @@ const StepList = () => {
                         Step {step.step_number}: {step.step_name}
                     </h3>
                     <p>{step.description}</p>
+                    <Link to={`/steps/${step.step_id}`}>View Details</Link> {/* Correct Link */}
                 </div>
             ))}
         </div>

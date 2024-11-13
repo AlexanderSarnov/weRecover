@@ -6,6 +6,8 @@ import { authenticateToken } from './middleware/authMiddleware';
 import stepRoutes from './routes/stepRoutes';
 import userRoutes from './routes/userRoutes';
 import questionRoutes from './routes/questionRoutes';
+import pool from './config/dbConfig';
+import testRoutes from './routes/testRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +21,7 @@ app.use(morgan('combined'));
 app.use('/api/steps', authenticateToken, stepRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/api/questions', authenticateToken, questionRoutes); // Register question routes with middleware
+app.use('/api', authenticateToken, testRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
