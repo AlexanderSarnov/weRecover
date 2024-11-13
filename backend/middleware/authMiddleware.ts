@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 interface CustomRequest extends Request {
-    user?: any;
+    user?: {
+        user_id: string;
+    };
 }
 
 export const authenticateToken = (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -14,12 +16,13 @@ export const authenticateToken = (req: CustomRequest, res: Response, next: NextF
         return;
     }
 
-    jwt.verify(token, process.env.JWT_SECRET as string, (err: unknown, user: any) => {
+    jwt.verify(token, process.env.JWT_SECRET as string, (err, user: any) => {
         if (err) {
             res.sendStatus(403);
             return;
         }
-        req.user = user;
+        (req as CustomRequest).user = { user_id: user.user_id }; // Attach user_id to request object with type casting
         next();
     });
 };
+

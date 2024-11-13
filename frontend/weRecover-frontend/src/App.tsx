@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import StepDetail from './components/StepDetail'; // Import the new StepDetail component
 
 const App: React.FC = () => {
     return (
@@ -14,6 +15,8 @@ const App: React.FC = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/dashboard/*" element={<ProtectedRoute component={Dashboard} />} />
+                <Route path="/steps/:step_id/*" element={<ProtectedRoute component={StepDetail} />} />{' '}
+                {/* Add the trailing '*' */}
             </Routes>
         </Router>
     );

@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import pool from '../config/dbConfig';
 
+// Function to handle user login
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
     console.log('loginUser function hit');
     const { email, password } = req.body;
@@ -26,7 +27,8 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
+        // Ensure the correct field is used for user ID in the JWT payload
+        const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
 
         console.log('Login successful:', { email: user.email }); // Log successful login
         res.status(200).json({ token, user });
@@ -36,6 +38,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
+// Function to handle user registration
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     console.log('registerUser function hit');
     const { username, email, password } = req.body;
@@ -54,10 +57,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         const newUser = result.rows[0];
         console.log('User inserted:', newUser);
 
-        console.log('Generating token');
-        const token = jwt.sign({ userId: newUser.user_id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
-
-        res.status(201).json({ token, user: newUser });
+        res.status(201).json({ user: newUser });
     } catch (err) {
         console.error('Error registering user', err);
         res.status(500).json({ message: 'Error registering user' });

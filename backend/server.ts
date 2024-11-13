@@ -1,10 +1,13 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import morgan from 'morgan'; // Import morgan for logging
+import morgan from 'morgan';
 import { authenticateToken } from './middleware/authMiddleware';
 import stepRoutes from './routes/stepRoutes';
 import userRoutes from './routes/userRoutes';
+import questionRoutes from './routes/questionRoutes';
+import pool from './config/dbConfig';
+import testRoutes from './routes/testRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,11 +15,13 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
-app.use(morgan('combined')); // Use morgan for logging
+app.use(morgan('combined'));
 
-// Routes
+// Routes with middleware
 app.use('/api/steps', authenticateToken, stepRoutes);
 app.use('/api/auth', userRoutes);
+app.use('/api/questions', authenticateToken, questionRoutes); // Register question routes with middleware
+app.use('/api', authenticateToken, testRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
