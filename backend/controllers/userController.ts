@@ -54,10 +54,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         const newUser = result.rows[0];
         console.log('User inserted:', newUser);
 
-        console.log('Generating token');
-        const token = jwt.sign({ userId: newUser.user_id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
-
-        res.status(201).json({ token, user: newUser });
+        res.status(201).json({ user: newUser });
     } catch (err) {
         console.error('Error registering user', err);
         res.status(500).json({ message: 'Error registering user' });
