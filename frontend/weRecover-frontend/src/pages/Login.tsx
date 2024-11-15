@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Added Link import
 import Header from '../components/Header';
+import Footer from '../components/Footer';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../App.css'; // Import custom styles
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -28,40 +31,50 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div>
+        <div className="d-flex flex-column min-vh-100">
             <Header />
-            <div className="container mt-4">
-                <h2>Login</h2>
-                <form onSubmit={handleLogin}>
-                    <div className="form-group">
-                        <label htmlFor="email">Email address</label>
-                        <input
-                            type="email"
-                            className="form-control"
-                            id="email"
-                            placeholder="Enter email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
+            <div className="container my-auto">
+                <div className="row justify-content-center">
+                    <div className="col-md-8 text-center">
+                        <h1>Login</h1>
+                        <form onSubmit={handleLogin}>
+                            <div className="form-group">
+                                <label htmlFor="email">Email address</label>
+                                <input
+                                    type="email"
+                                    className="form-control"
+                                    id="email"
+                                    placeholder="Enter email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="password">Password</label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    id="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" className="btn btn-primary m-2">
+                                Login
+                            </button>
+                        </form>
+                        <div className="mt-3">
+                            <Link to="/register" className="btn btn-secondary">
+                                Register
+                            </Link>
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            className="form-control"
-                            id="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <button type="submit" className="btn btn-primary">
-                        Login
-                    </button>
-                </form>
+                </div>
             </div>
+            <Footer />
         </div>
     );
 };
