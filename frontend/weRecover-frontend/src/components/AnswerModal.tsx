@@ -8,7 +8,7 @@ interface AnswerModalProps {
     onHide: () => void;
     questionId: number;
     answer: Answer | null;
-    onRefresh: () => void; // Add onRefresh prop
+    onRefresh: () => void;
 }
 
 interface Answer {
@@ -27,8 +27,8 @@ const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModa
         if (token) {
             try {
                 const endpoint = answer
-                    ? `${API_BASE_URL}/questions/${questionId}/answers/${answer.answer_id}` // Correct endpoint for updating an answer
-                    : `${API_BASE_URL}/questions/${questionId}/answers`; // Correct endpoint for adding an answer
+                    ? `${API_BASE_URL}/questions/${questionId}/answers/${answer.answer_id}` // Use the base URL
+                    : `${API_BASE_URL}/questions/${questionId}/answers`; // Use the base URL
 
                 const method = answer ? 'put' : 'post'; // Correct HTTP methods
 
@@ -62,7 +62,7 @@ const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModa
                             as="textarea"
                             rows={3}
                             value={answerText}
-                            onChange={(e) => setAnswerText(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAnswerText(e.target.value)} // Specify event type
                             required
                         />
                     </Form.Group>

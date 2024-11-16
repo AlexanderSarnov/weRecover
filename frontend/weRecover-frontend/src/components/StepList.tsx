@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import API_BASE_URL from '../apiConfig';
 
@@ -13,11 +13,11 @@ interface Step {
 const StepList = () => {
     const [steps, setSteps] = useState<Step[]>([]);
     const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     useEffect(() => {
         if (token) {
-            fetch('${API_BASE_URL}/steps', {
+            fetch(`${API_BASE_URL}/steps`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -30,9 +30,9 @@ const StepList = () => {
         }
     }, [token]);
 
-    const handleStepClick = (step_id: number) => {
-        navigate(`/step/${step_id}`);
-    };
+    // const handleStepClick = (step_id: number) => {
+    //     navigate(`/step/${step_id}`);
+    // };
 
     return (
         <div className="step-list">
