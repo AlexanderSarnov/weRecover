@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
+import API_BASE_URL from '../apiConfig';
 
 interface AnswerModalProps {
     show: boolean;
@@ -26,8 +27,8 @@ const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModa
         if (token) {
             try {
                 const endpoint = answer
-                    ? `http://localhost:3000/api/questions/${questionId}/answers/${answer.answer_id}` // Correct endpoint for updating an answer
-                    : `http://localhost:3000/api/questions/${questionId}/answers`; // Correct endpoint for adding an answer
+                    ? `${API_BASE_URL}/questions/${questionId}/answers/${answer.answer_id}` // Correct endpoint for updating an answer
+                    : `${API_BASE_URL}/questions/${questionId}/answers`; // Correct endpoint for adding an answer
 
                 const method = answer ? 'put' : 'post'; // Correct HTTP methods
 

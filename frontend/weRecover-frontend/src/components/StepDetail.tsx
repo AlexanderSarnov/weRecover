@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import QuestionItem from './QuestionItem';
+import API_BASE_URL from '../apiConfig';
 
 interface Question {
     question_id: number;
@@ -22,7 +23,7 @@ const StepDetail = () => {
 
     const fetchQuestions = () => {
         if (token) {
-            fetch(`http://localhost:3000/api/questions/${step_id}/questions`, {
+            fetch(`${API_BASE_URL}/questions/${step_id}/questions`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

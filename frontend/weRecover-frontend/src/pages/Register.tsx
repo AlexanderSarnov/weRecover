@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'; // Import custom styles
+import API_BASE_URL from '../apiConfig';
 
 const Register: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -14,7 +15,7 @@ const Register: React.FC = () => {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/register', {
+            const response = await axios.post('${API_BASE_URL}/auth/register', {
                 username,
                 email,
                 password,

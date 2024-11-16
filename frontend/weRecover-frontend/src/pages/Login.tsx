@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'; // Import custom styles
+import API_BASE_URL from '../apiConfig';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ const Login: React.FC = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/login', {
+            const response = await axios.post('${API_BASE_URL}/auth/login', {
                 email,
                 password,
             });

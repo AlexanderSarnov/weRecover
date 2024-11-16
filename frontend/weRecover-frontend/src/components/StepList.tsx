@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import API_BASE_URL from '../apiConfig';
 
 interface Step {
     step_id: number;
@@ -16,7 +17,7 @@ const StepList = () => {
 
     useEffect(() => {
         if (token) {
-            fetch('http://localhost:3000/api/steps', {
+            fetch('${API_BASE_URL}/steps', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
