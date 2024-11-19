@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../App.css'; // Import custom styles
+import '../styles/App.css'; // Import custom styles
 import API_BASE_URL from '../apiConfig';
 
 const Register: React.FC = () => {

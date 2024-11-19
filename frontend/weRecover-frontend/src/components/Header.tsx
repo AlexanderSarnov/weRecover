@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Header = () => {
     return (
         <Navbar bg="light" expand="lg">
-            <div className="container">
+            <div className="container">``
                 <LinkContainer to="/">
                     <Navbar.Brand>
                         <img src={logo} alt="weRecover Logo" className="img-fluid" style={{ height: '50px' }} />

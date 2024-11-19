@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+import StepsPage from './pages/StepsPage'; // Updated import
 import ProtectedRoute from './components/ProtectedRoute';
-import StepDetail from './components/StepDetail'; // Import the new StepDetail component
+import StepDetail from './components/StepDetail';
 
 const App: React.FC = () => {
     return (
@@ -14,9 +14,8 @@ const App: React.FC = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/dashboard/*" element={<ProtectedRoute component={Dashboard} />} />
-                <Route path="/steps/:step_id/*" element={<ProtectedRoute component={StepDetail} />} />{' '}
-                {/* Add the trailing '*' */}
+                <Route path="/steps/*" element={<ProtectedRoute component={StepsPage} />} /> {/* Updated path */}
+                <Route path="/steps/:step_id/*" element={<ProtectedRoute component={StepDetail} />} />
             </Routes>
         </Router>
     );
