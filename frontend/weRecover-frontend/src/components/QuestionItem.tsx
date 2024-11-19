@@ -28,8 +28,6 @@ const QuestionItem = ({ question, onRefresh }: { question: Question; onRefresh: 
         setShowModal(true);
     };
 
-    console.log('QuestionItem answers:', question.answers); // Debug the answers
-
     // Filter out any null answers
     const validAnswers = question.answers.filter((answer) => answer !== null);
 
@@ -40,11 +38,15 @@ const QuestionItem = ({ question, onRefresh }: { question: Question; onRefresh: 
                 {validAnswers.map((answer) => (
                     <li key={answer.answer_id}>
                         {answer.answer_text}
-                        <button onClick={() => handleEditAnswer(answer)}>Edit</button>
+                        <button onClick={() => handleEditAnswer(answer)} className="btn btn-secondary">
+                            Edit
+                        </button>
                     </li>
                 ))}
             </ul>
-            <button onClick={handleAddAnswer}>Add Answer</button>
+            <button onClick={handleAddAnswer} className="btn btn-primary">
+                Add Answer
+            </button>
             {showModal && (
                 <AnswerModal
                     show={showModal}
