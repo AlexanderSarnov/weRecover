@@ -1,0 +1,30 @@
+.add-question-form {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    border: 1px solid #bfeadf; /* Menthol color border */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Match the shadow of other cards */
+}
+
+.add-question-form input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd; /* Consistent grey color */
+    border-radius: 4px;
+}
+
+.add-question-form button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-question-form button:hover {
+    background-color: var(--highlight-color);
+}
