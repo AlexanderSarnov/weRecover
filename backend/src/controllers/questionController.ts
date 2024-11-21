@@ -10,10 +10,10 @@ interface CustomRequest extends Request {
 // Get all questions for a specific step, including user-specific questions and their answers
 export const getQuestionsForStep = async (req: CustomRequest, res: Response) => {
     const { step_id } = req.params;
-    const user_id = req.user?.user_id; // Extract the user ID from the authenticated user
+    const user_id = req.user?.user_id;
     try {
         const result = await pool.query(
-            ` SELECT q.*, json_agg(a.*) AS answers FROM questions q LEFT JOIN answers a ON q.question_id = a.question_id AND a.user_id = $2 WHERE q.step_id = $1 AND (q.is_flagged = FALSE OR q.user_id = $2) GROUP BY q.question_id ORDER BY q.question_id; `,
+            `SELECT q.*, json_agg(a.*) AS answers FROM questions q LEFT JOIN answers a ON q.question_id = a.question_id AND a.user_id = $2 WHERE q.step_id = $1 AND (q.is_flagged = FALSE OR q.user_id = $2) AND (q.is_public = TRUE OR q.user_id = $2) AND q.question_id NOT IN (SELECT question_id FROM question_mutes WHERE user_id = $2) GROUP BY q.question_id ORDER BY q.question_id;`,
             [step_id, user_id]
         );
         res.json(result.rows);
@@ -23,17 +23,18 @@ export const getQuestionsForStep = async (req: CustomRequest, res: Response) => 
     }
 };
 
+
 // Add a new question to a specific step
 export const addQuestion = async (req: CustomRequest, res: Response) => {
     const { step_id } = req.params;
-    const { question_text } = req.body;
-    const user_id = req.user?.user_id; // Extract the user ID from the authenticated user
-    const is_custom = true; // Ensure the question is marked as custom
+    const { question_text, is_public } = req.body; // Include is_public in the request body
+    const user_id = req.user?.user_id;
+    const is_custom = true;
 
     try {
         const newQuestion = await pool.query(
-            'INSERT INTO questions (step_id, user_id, question_text, is_custom) VALUES ($1, $2, $3, $4) RETURNING *',
-            [step_id, user_id, question_text, is_custom]
+            'INSERT INTO questions (step_id, user_id, question_text, is_custom, is_public) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [step_id, user_id, question_text, is_custom, is_public]
         );
         res.json(newQuestion.rows[0]);
     } catch (error) {
@@ -44,6 +45,7 @@ export const addQuestion = async (req: CustomRequest, res: Response) => {
         }
     }
 };
+
 
 // Get all non-flagged questions for a specific step
 export const getQuestions = async (req: CustomRequest, res: Response) => {
@@ -125,6 +127,51 @@ export const updateAnswer = async (req: CustomRequest, res: Response): Promise<v
         } else {
             res.status(500).json({ error: 'An unknown error occurred' });
         }
+    }
+};
+
+// Mute a question
+export const muteQuestion = async (req: CustomRequest, res: Response): Promise<void> => {
+    const { question_id } = req.params;
+    const user_id = req.user?.user_id;
+    try {
+        await pool.query('INSERT INTO question_mutes (question_id, user_id) VALUES ($1, $2)', [question_id, user_id]);
+        res.status(200).json({ message: 'Question muted successfully' });
+    } catch (error) {
+        console.error('Error muting question:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Remove a question
+export const removeQuestion = async (req: CustomRequest, res: Response): Promise<void> => {
+    const { step_id, question_id } = req.params;
+    const user_id = req.user?.user_id;
+    try {
+        const result = await pool.query('SELECT * FROM questions WHERE question_id = $1 AND step_id = $2', [
+            question_id,
+            step_id,
+        ]);
+        if (result.rowCount === 0) {
+            res.status(404).json({ message: 'Question not found' });
+            return;
+        }
+        const question = result.rows[0];
+        if (question.user_id === user_id) {
+            // Delete personal question}
+            await pool.query('DELETE FROM questions WHERE question_id = $1', [question_id]);
+            res.status(200).json({ message: 'Question deleted successfully' });
+        } else {
+            // Mute public question for the user}
+            await pool.query('INSERT INTO question_mutes (question_id, user_id) VALUES ($1, $2)', [
+                question_id,
+                user_id,
+            ]);
+            res.status(200).json({ message: 'Question muted for user successfully' });
+        }
+    } catch (error) {
+        console.error('Error removing question:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
