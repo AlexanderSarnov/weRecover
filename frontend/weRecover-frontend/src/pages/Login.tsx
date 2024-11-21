@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom'; // Added Link import
+import { useNavigate, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../App.css'; // Import custom styles
+import '../styles/App.css'; // Import custom styles
 import API_BASE_URL from '../apiConfig';
 
 const Login: React.FC = () => {
@@ -24,8 +24,8 @@ const Login: React.FC = () => {
             // Store JWT token in local storage
             localStorage.setItem('token', response.data.token);
 
-            // Redirect to the dashboard
-            navigate('/dashboard');
+            // Redirect to the steps page
+            navigate('/steps');
         } catch (err: any) {
             console.error('Error during login:', err.response ? err.response.data : err.message);
         }
