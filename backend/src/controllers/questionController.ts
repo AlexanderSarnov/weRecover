@@ -23,7 +23,6 @@ export const getQuestionsForStep = async (req: CustomRequest, res: Response) => 
     }
 };
 
-
 // Add a new question to a specific step
 export const addQuestion = async (req: CustomRequest, res: Response) => {
     const { step_id } = req.params;
@@ -45,7 +44,6 @@ export const addQuestion = async (req: CustomRequest, res: Response) => {
         }
     }
 };
-
 
 // Get all non-flagged questions for a specific step
 export const getQuestions = async (req: CustomRequest, res: Response) => {
@@ -172,6 +170,22 @@ export const removeQuestion = async (req: CustomRequest, res: Response): Promise
     } catch (error) {
         console.error('Error removing question:', error);
         res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Remove answer
+export const removeAnswer = async (req: Request, res: Response): Promise<void> => {
+    const { answer_id } = req.params;
+    try {
+        const result = await pool.query('DELETE FROM answers WHERE answer_id = $1 RETURNING *', [answer_id]);
+        if (result.rowCount === 0) {
+            res.status(404).json({ error: 'Answer not found' });
+            return;
+        }
+        res.json({ message: 'Answer deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting answer:', error);
+        res.status(500).json({ error: 'Error deleting answer' });
     }
 };
 
