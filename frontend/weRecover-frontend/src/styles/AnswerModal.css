@@ -1,0 +1,42 @@
+/* AnswerModal.css */
+
+/* Style for making the text area larger both horizontally and vertically */
+.textarea-large {
+    width: 100%; /* Full width */
+    height: 150px; /* Adjust height as needed */
+    resize: both; /* Allow resizing */
+    padding: 10px; /* Add padding for better text visibility */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ced4da; /* Border color */
+}
+
+/* Center the save button */
+.button-center {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px; /* Add margin to separate from other elements */
+}
+
+/* Add some margin to the buttons */
+.button-margin {
+    margin-top: 10px; /* Add margin to separate from other elements */
+}
+
+/* Existing styles for modal body and buttons */
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-body .btn {
+    width: 100%;
+    max-width: 150px;
+    margin-top: 10px;
+}
+
+.modal-body audio {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 10px;
+}

@@ -1,3 +1,5 @@
+/* StepDetail.css */
+
 .step-detail-container {
     padding: 2rem;
     text-align: center;
@@ -62,6 +64,8 @@
     cursor: pointer;
     transition: background-color 0.3s;
     margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
 }
 
 .question-card li button:hover {
@@ -74,4 +78,14 @@
     margin-top: 1rem;
     text-align: center;
     width: auto;
+}
+
+/* Add margin for icons within buttons */
+.question-card .btn i {
+    margin-right: 5px;
+}
+
+/* Add margin between the Add Answer and Remove Question buttons */
+.question-item .btn + .btn {
+    margin-left: 10px;
 }

@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import axios from 'axios';
+import { handleSpeak, startRecording } from '../utils/speechUtils'; // Import utility functions
+import '../styles/AnswerModal.css'; // Import the CSS file for the modal styling
+import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
+import axios from 'axios'; // Import axios
 import API_BASE_URL from '../apiConfig';
 
 interface AnswerModalProps {
@@ -20,6 +23,9 @@ interface Answer {
 
 const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModalProps) => {
     const [answerText, setAnswerText] = useState(answer ? answer.answer_text : '');
+    const [audioUrl, setAudioUrl] = useState<string>('');
+    const [isRecording, setIsRecording] = useState<boolean>(false);
+    const [stopRecording, setStopRecording] = useState<(() => void) | null>(null);
     const token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -49,6 +55,20 @@ const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModa
         }
     };
 
+    const handleStartRecording = async () => {
+        const stop = await startRecording(setAnswerText);
+        setStopRecording(() => stop);
+        setIsRecording(true);
+    };
+
+    const handleStopRecording = () => {
+        if (stopRecording) {
+            stopRecording();
+            setStopRecording(null);
+            setIsRecording(false);
+        }
+    };
+
     return (
         <Modal show={show} onHide={onHide}>
             <Modal.Header closeButton>
@@ -60,16 +80,31 @@ const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModa
                         <Form.Label>Answer</Form.Label>
                         <Form.Control
                             as="textarea"
-                            rows={3}
+                            className="textarea-large" // Apply the custom class
                             value={answerText}
                             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAnswerText(e.target.value)} // Specify event type
                             required
                         />
                     </Form.Group>
-                    <Button variant="primary" type="submit">
-                        {answer ? 'Save Changes' : 'Add Answer'}
-                    </Button>
+                    <div className="button-center">
+                        {' '}
+                        {/* Center the save button */}
+                        <Button variant="primary" type="submit">
+                            {answer ? 'Save Changes' : 'Add Answer'}
+                        </Button>
+                    </div>
                 </Form>
+                <Button variant="info" onClick={() => handleSpeak(answerText, setAudioUrl)} className="button-margin">
+                    <i className="bi bi-volume-up"></i> Listen
+                </Button>
+                {audioUrl && <audio src={audioUrl} controls className="button-margin" />}
+
+                <Button
+                    className="btn btn-secondary button-margin"
+                    onClick={isRecording ? handleStopRecording : handleStartRecording}>
+                    <i className={`bi ${isRecording ? 'bi-stop-circle' : 'bi-mic'}`}></i>{' '}
+                    {isRecording ? 'Stop Recording' : 'Record Answer'}
+                </Button>
             </Modal.Body>
         </Modal>
     );

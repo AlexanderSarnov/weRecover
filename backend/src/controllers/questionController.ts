@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../config/dbConfig';
+import { transcribeAudio } from '../utils/speechToText';
+import { synthesizeSpeech } from '../utils/textToSpeech';
 
 interface CustomRequest extends Request {
     user?: {
@@ -188,6 +190,44 @@ export const removeAnswer = async (req: Request, res: Response): Promise<void> =
         res.status(500).json({ error: 'Error deleting answer' });
     }
 };
+
+// Transcribe speech to text
+export const transcribe = async (req: CustomRequest, res: Response) => {
+    try {
+        const audioBuffer = req.file?.buffer;
+        if (!audioBuffer) throw new Error('No audio file provided');
+
+        const transcription = await transcribeAudio(audioBuffer);
+        res.json({ transcription });
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+
+
+
+// Synthesize text to speech
+export const synthesize = async (req: CustomRequest, res: Response) => {
+    try {
+        const { text } = req.body;
+        const audioContent = await synthesizeSpeech(text);
+        res.setHeader('Content-Type', 'audio/mp3');
+        res.send(audioContent);
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+
 
 // Test function to get all questions for a specific step
 export const getTestQuestions = async (req: Request, res: Response) => {
