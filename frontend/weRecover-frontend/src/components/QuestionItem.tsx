@@ -3,6 +3,7 @@ import AnswerModal from './AnswerModal';
 import axios from 'axios';
 import API_BASE_URL from '../apiConfig';
 import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
+import '../styles/QuestionItem.css'; // Ensure the CSS file is imported
 
 interface Answer {
     answer_id: number;
@@ -27,7 +28,7 @@ interface QuestionItemProps {
 const QuestionItem: React.FC<QuestionItemProps> = ({ question, stepId, onRefresh }) => {
     const [showModal, setShowModal] = useState(false);
     const [editAnswer, setEditAnswer] = useState<Answer | null>(null);
-    const [audioUrl, setAudioUrl] = useState<string>('');
+    const [audioUrl, setAudioUrl] = useState<string | null>(null); // Ensure audioUrl can be null
     const token = localStorage.getItem('token');
 
     const handleAddAnswer = () => {
@@ -91,7 +92,10 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question, stepId, onRefresh
         }
     };
 
-    // Use optional chaining to avoid accessing undefined property
+    const handleCloseAudio = () => {
+        setAudioUrl(null); // Reset the audio URL to null
+    };
+
     const validAnswers = question.answers?.filter((answer) => answer !== null) || [];
 
     return (
@@ -99,9 +103,9 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question, stepId, onRefresh
             <h4>{question.question_text}</h4>
             <ul>
                 {validAnswers.map((answer) => (
-                    <li key={answer.answer_id}>
+                    <li key={answer.answer_id} className="answer-item">
                         {answer.answer_text}
-                        <div>
+                        <div className="button-group">
                             <button onClick={() => handleEditAnswer(answer)} className="btn btn-secondary">
                                 <i className="bi bi-pencil-square"></i> Edit
                             </button>
@@ -130,7 +134,14 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question, stepId, onRefresh
                     onRefresh={onRefresh}
                 />
             )}
-            {audioUrl && <audio src={audioUrl} controls />}
+            {audioUrl && (
+                <div className="audio-container">
+                    <audio src={audioUrl} controls />
+                    <button onClick={handleCloseAudio} className="close-button">
+                        <i className="bi bi-x"></i>
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

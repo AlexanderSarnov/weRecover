@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { handleSpeak, startRecording } from '../utils/speechUtils'; // Import utility functions
-import '../styles/AnswerModal.css'; // Import the CSS file for the modal styling
-import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
-import axios from 'axios'; // Import axios
+import { handleSpeak, startRecording } from '../utils/speechUtils';
+import '../styles/AnswerModal.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import axios from 'axios';
 import API_BASE_URL from '../apiConfig';
 
 interface AnswerModalProps {
@@ -26,17 +26,17 @@ const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModa
     const [audioUrl, setAudioUrl] = useState<string>('');
     const [isRecording, setIsRecording] = useState<boolean>(false);
     const [stopRecording, setStopRecording] = useState<(() => void) | null>(null);
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (token) {
             try {
                 const endpoint = answer
-                    ? `${API_BASE_URL}/questions/${questionId}/answers/${answer.answer_id}` // Use the base URL
-                    : `${API_BASE_URL}/questions/${questionId}/answers`; // Use the base URL
+                    ? `${API_BASE_URL}/questions/${questionId}/answers/${answer.answer_id}`
+                    : `${API_BASE_URL}/questions/${questionId}/answers`;
 
-                const method = answer ? 'put' : 'post'; // Correct HTTP methods
+                const method = answer ? 'put' : 'post';
 
                 await axios({
                     method,
@@ -46,7 +46,7 @@ const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModa
                 });
 
                 onHide();
-                onRefresh(); // Call onRefresh after successful save
+                onRefresh();
             } catch (err) {
                 console.error('Error saving answer:', err);
             }
@@ -69,6 +69,10 @@ const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModa
         }
     };
 
+    const handleCloseAudio = () => {
+        setAudioUrl('');
+    };
+
     return (
         <Modal show={show} onHide={onHide}>
             <Modal.Header closeButton>
@@ -80,31 +84,48 @@ const AnswerModal = ({ show, onHide, questionId, answer, onRefresh }: AnswerModa
                         <Form.Label>Answer</Form.Label>
                         <Form.Control
                             as="textarea"
-                            className="textarea-large" // Apply the custom class
+                            className="textarea-large"
                             value={answerText}
-                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAnswerText(e.target.value)} // Specify event type
+                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAnswerText(e.target.value)}
                             required
+                            style={{
+                                width: '100%',
+                                height: '200px',
+                                minWidth: '400px',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                border: '1px solid #ced4da',
+                                fontSize: '16px',
+                                boxSizing: 'border-box',
+                            }}
                         />
                     </Form.Group>
                     <div className="button-center">
-                        {' '}
-                        {/* Center the save button */}
-                        <Button variant="primary" type="submit">
+                        <Button
+                            className="btn btn-secondary button-margin"
+                            onClick={isRecording ? handleStopRecording : handleStartRecording}>
+                            <i className={`bi ${isRecording ? 'bi-stop-circle' : 'bi-mic'}`}></i>
+                            {isRecording ? 'Stop Recording' : 'Record Answer'}
+                        </Button>
+                        <Button
+                            variant="info"
+                            onClick={() => handleSpeak(answerText, setAudioUrl)}
+                            className="button-margin">
+                            <i className="bi bi-volume-up"></i> Listen
+                        </Button>
+                        <Button variant="primary" type="submit" className="button-margin">
                             {answer ? 'Save Changes' : 'Add Answer'}
                         </Button>
                     </div>
                 </Form>
-                <Button variant="info" onClick={() => handleSpeak(answerText, setAudioUrl)} className="button-margin">
-                    <i className="bi bi-volume-up"></i> Listen
-                </Button>
-                {audioUrl && <audio src={audioUrl} controls className="button-margin" />}
-
-                <Button
-                    className="btn btn-secondary button-margin"
-                    onClick={isRecording ? handleStopRecording : handleStartRecording}>
-                    <i className={`bi ${isRecording ? 'bi-stop-circle' : 'bi-mic'}`}></i>{' '}
-                    {isRecording ? 'Stop Recording' : 'Record Answer'}
-                </Button>
+                {audioUrl && (
+                    <div className="audio-container">
+                        <audio src={audioUrl} controls className="button-margin" />
+                        <button onClick={handleCloseAudio} className="close-button">
+                            <i className="bi bi-x"></i>
+                        </button>
+                    </div>
+                )}
             </Modal.Body>
         </Modal>
     );
