@@ -2,12 +2,15 @@
 
 /* Style for making the text area larger both horizontally and vertically */
 .textarea-large {
-    width: 100%; /* Full width */
-    height: 150px; /* Adjust height as needed */
+    width: 100% !important; /* Full width */
+    height: 200px !important; /* Adjust height as needed */
+    min-width: 400px !important; /* Minimum width to ensure horizontal size */
     resize: both; /* Allow resizing */
     padding: 10px; /* Add padding for better text visibility */
     border-radius: 5px; /* Rounded corners */
     border: 1px solid #ced4da; /* Border color */
+    font-size: 16px; /* Adjust font size for better readability */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
 /* Center the save button */
@@ -19,7 +22,7 @@
 
 /* Add some margin to the buttons */
 .button-margin {
-    margin-top: 10px; /* Add margin to separate from other elements */
+    margin: 0 5px; /* Add horizontal margin between the buttons */
 }
 
 /* Existing styles for modal body and buttons */
@@ -29,14 +32,54 @@
     align-items: center;
 }
 
+/* Style for modal buttons */
 .modal-body .btn {
-    width: 100%;
-    max-width: 150px;
+    width: auto; /* Adjust width for smaller buttons */
+    max-width: none; /* Remove max-width constraint */
     margin-top: 10px;
+    padding: 5px 10px; /* Smaller padding for more compact buttons */
+    font-size: 14px; /* Smaller font size for more compact buttons */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
-.modal-body audio {
-    width: 100%;
-    max-width: 600px;
+/* Ensure icons are spaced properly from text */
+.modal-body .btn i {
+    margin-right: 5px; /* Add space between the icon and text */
+}
+
+/* Style for the audio player */
+.modal-body .audio-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the items */
+    gap: 10px; /* Add a small gap between the items */
     margin-top: 10px;
+    width: 100%; /* Ensure the container spans the full width */
+    position: relative;
+}
+
+/* Adjust the audio player to include space for the close button */
+.modal-body .audio-container audio {
+    flex-grow: 1; /* Allow the audio player to grow */
+    width: calc(100% - 40px); /* Adjust width to make space for the button */
+    max-width: 600px; /* Add a maximum width */
+    border: none; /* Remove border */
+    border-radius: 0; /* Ensure no rounded corners */
+}
+
+/* Style for the close button */
+.modal-body .close-button {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; /* Ensure the close button stays on top */
+    margin-left: -10px; /* Slightly adjust the left margin */
 }

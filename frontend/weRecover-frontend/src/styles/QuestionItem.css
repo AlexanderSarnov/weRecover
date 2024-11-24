@@ -1,0 +1,73 @@
+/* QuestionItem.css */
+
+/* Style for the answer item */
+.answer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+}
+
+/* Style for the button group */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* Add spacing between the buttons */
+.button-group .btn {
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Ensure buttons are square */
+    height: 60px; /* Ensure buttons are square */
+}
+
+/* Icon above text */
+.button-group .btn i {
+    margin-bottom: 5px; /* Add space between the icon and text */
+}
+
+/* Remove margin for the last button */
+.button-group .btn:last-child {
+    margin-bottom: 0;
+}
+
+/* Style for the audio container */
+.audio-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the items */
+    gap: 10px; /* Add a small gap between the items */
+    margin-top: 10px;
+    width: 100%; /* Ensure the container spans the full width */
+    position: relative;
+}
+
+/* Adjust the audio player to include space for the close button */
+.audio-container audio {
+    flex-grow: 1; /* Allow the audio player to grow */
+    width: calc(100% - 40px); /* Adjust width to make space for the button */
+    max-width: 600px; /* Add a maximum width */
+}
+
+/* Style for the close button */
+.close-button {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; /* Ensure the close button stays on top */
+    margin-left: -10px; /* Slightly adjust the left margin */
+}
