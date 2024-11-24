@@ -194,8 +194,8 @@ export const removeAnswer = async (req: Request, res: Response): Promise<void> =
 // Transcribe speech to text
 export const transcribe = async (req: CustomRequest, res: Response) => {
     try {
-        const audioBuffer = req.file?.buffer; // Ensure buffer is accessed safely
-        if (!audioBuffer) throw new Error("No audio file provided");
+        const audioBuffer = req.file?.buffer;
+        if (!audioBuffer) throw new Error('No audio file provided');
 
         const transcription = await transcribeAudio(audioBuffer);
         res.json({ transcription });
@@ -207,6 +207,8 @@ export const transcribe = async (req: CustomRequest, res: Response) => {
         }
     }
 };
+
+
 
 
 // Synthesize text to speech

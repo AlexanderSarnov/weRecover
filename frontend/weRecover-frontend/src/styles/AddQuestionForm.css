@@ -1,3 +1,5 @@
+/* AddQuestionForm.css */
+
 .add-question-form {
     margin-bottom: 2rem;
     padding: 1rem;
@@ -5,6 +7,9 @@
     border-radius: 8px;
     border: 1px solid #bfeadf; /* Menthol color border */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Match the shadow of other cards */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .add-question-form input[type="text"] {
@@ -13,6 +18,13 @@
     margin-bottom: 1rem;
     border: 1px solid #ddd; /* Consistent grey color */
     border-radius: 4px;
+}
+
+/* Flex container for buttons */
+.add-question-form .button-container {
+    display: flex;
+    gap: 1rem; /* Add spacing between buttons */
+    justify-content: center; /* Center buttons horizontally */
 }
 
 .add-question-form button {
@@ -27,4 +39,13 @@
 
 .add-question-form button:hover {
     background-color: var(--highlight-color);
+}
+
+.add-question-form .btn-record {
+    display: flex;
+    align-items: center;
+}
+
+.add-question-form .btn-record i {
+    margin-right: 5px;
 }

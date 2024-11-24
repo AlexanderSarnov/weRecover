@@ -13,21 +13,6 @@ const storage = new Storage({
 
 const bucket = storage.bucket(process.env.GCLOUD_BUCKET_NAME as string);
 
-// Extend Multer File interface to include originalname
-declare global {
-    namespace Express {
-        interface MulterFile {
-            originalname: string;
-            cloudStorageObject?: string;
-            cloudStoragePublicUrl?: string;
-        }
-
-        interface Request {
-            file?: MulterFile;
-        }
-    }
-}
-
 const multerConfig = multer({
     storage: multer.memoryStorage(), // Store files in memory temporarily
 });
@@ -44,10 +29,21 @@ const uploadToGCS = (req: Request, res: Response, next: NextFunction) => {
         next(err);
     });
 
-    blobStream.on('finish', () => {
-        if (req.file) {
-            req.file.cloudStorageObject = blob.name;
-            req.file.cloudStoragePublicUrl = format(`https://storage.googleapis.com/${bucket.name}/${blob.name}`);
+    blobStream.on('finish', async () => {
+        // Cast req.file to MulterFile when accessing custom properties
+        const multerFile = req.file as {
+            originalname: string;
+            buffer: Buffer;
+            cloudStorageObject?: string;
+            cloudStoragePublicUrl?: string;
+        };
+
+        multerFile.cloudStorageObject = blob.name;
+        multerFile.cloudStoragePublicUrl = format(`https://storage.googleapis.com/${bucket.name}/${blob.name}`);
+        try {
+            await blob.makePublic();
+        } catch (err) {
+            next(err);
         }
         next();
     });

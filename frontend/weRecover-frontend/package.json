@@ -13,11 +13,13 @@
         "@popperjs/core": "^2.11.8",
         "axios": "^1.7.7",
         "bootstrap": "^5.3.3",
+        "bootstrap-icons": "^1.11.3",
         "react": "^18.3.1",
         "react-bootstrap": "^2.10.5",
         "react-dom": "^18.3.1",
         "react-router-bootstrap": "^0.26.3",
-        "react-router-dom": "^6.27.0"
+        "react-router-dom": "^6.27.0",
+        "recordrtc": "^5.6.2"
     },
     "devDependencies": {
         "@eslint/js": "^9.13.0",
@@ -26,6 +28,7 @@
         "@types/react-bootstrap": "^0.32.37",
         "@types/react-dom": "^18.3.1",
         "@types/react-router-bootstrap": "^0.26.6",
+        "@types/recordrtc": "^5.6.14",
         "@vitejs/plugin-react-swc": "^3.5.0",
         "eslint": "^9.13.0",
         "eslint-plugin-react-hooks": "^5.0.0",

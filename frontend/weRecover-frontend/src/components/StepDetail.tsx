@@ -6,6 +6,7 @@ import Header from './Header';
 import Footer from './Footer';
 import API_BASE_URL from '../apiConfig';
 import '../styles/StepDetail.css';
+import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
 
 interface Answer {
     answer_id: number;

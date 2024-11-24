@@ -4,8 +4,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const client = new SpeechClient({
-    keyFilename: process.env.GOOGLE_CLOUD_SPEECH_TO_TEXT_API_KEY,
+    keyFilename: process.env.GCLOUD_KEY_FILE,
 });
+
 
 export async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
     const audio = {
@@ -14,7 +15,7 @@ export async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
 
     const config: protos.google.cloud.speech.v1.IRecognitionConfig = {
         encoding: protos.google.cloud.speech.v1.RecognitionConfig.AudioEncoding.LINEAR16,
-        sampleRateHertz: 16000,
+        sampleRateHertz: 48000,
         languageCode: 'en-US',
     };
 

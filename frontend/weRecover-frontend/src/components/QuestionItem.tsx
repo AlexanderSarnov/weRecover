@@ -2,6 +2,7 @@ import { useState } from 'react';
 import AnswerModal from './AnswerModal';
 import axios from 'axios';
 import API_BASE_URL from '../apiConfig';
+import 'bootstrap-icons/font/bootstrap-icons.css'; // Import Bootstrap Icons
 
 interface Answer {
     answer_id: number;
@@ -26,6 +27,7 @@ interface QuestionItemProps {
 const QuestionItem: React.FC<QuestionItemProps> = ({ question, stepId, onRefresh }) => {
     const [showModal, setShowModal] = useState(false);
     const [editAnswer, setEditAnswer] = useState<Answer | null>(null);
+    const [audioUrl, setAudioUrl] = useState<string>('');
     const token = localStorage.getItem('token');
 
     const handleAddAnswer = () => {
@@ -53,22 +55,7 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question, stepId, onRefresh
         }
     };
 
-    const handleMute = async () => {
-        if (token) {
-            try {
-                await axios.delete(`${API_BASE_URL}/questions/${stepId}/questions/${question.question_id}/mute`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                onRefresh();
-            } catch (error) {
-                console.error('Error muting question:', error);
-            }
-        } else {
-            console.error('No token found');
-        }
-    };
-
-    const handleDelete = async () => {
+    const handleRemoveQuestion = async () => {
         if (token) {
             try {
                 await axios.delete(`${API_BASE_URL}/questions/${stepId}/questions/${question.question_id}`, {
@@ -76,10 +63,31 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question, stepId, onRefresh
                 });
                 onRefresh(); // Refresh questions after deletion
             } catch (error) {
-                console.error('Error deleting question:', error);
+                console.error('Error removing question:', error);
             }
         } else {
             console.error('No token found');
+        }
+    };
+
+    const handleSpeak = async (text: string) => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
+        try {
+            const response = await axios.post(
+                `${API_BASE_URL}/questions/synthesize`,
+                { text },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Include the token in the headers
+                    },
+                    responseType: 'blob', // Important to get the blob response
+                }
+            );
+            const url = URL.createObjectURL(response.data);
+            setAudioUrl(url);
+        } catch (error) {
+            console.error('Error synthesizing text:', error);
         }
     };
 
@@ -95,27 +103,24 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question, stepId, onRefresh
                         {answer.answer_text}
                         <div>
                             <button onClick={() => handleEditAnswer(answer)} className="btn btn-secondary">
-                                Edit
+                                <i className="bi bi-pencil-square"></i> Edit
                             </button>
                             <button onClick={() => handleDeleteAnswer(answer.answer_id)} className="btn btn-danger">
-                                Delete
+                                <i className="bi bi-trash"></i> Delete
+                            </button>
+                            <button onClick={() => handleSpeak(answer.answer_text)} className="btn btn-info">
+                                <i className="bi bi-volume-up"></i> Listen
                             </button>
                         </div>
                     </li>
                 ))}
             </ul>
             <button onClick={handleAddAnswer} className="btn btn-primary">
-                Add Answer
+                <i className="bi bi-plus-circle"></i> Add Answer
             </button>
-            {question.is_public ? (
-                <button onClick={handleMute} className="btn btn-warning">
-                    Mute
-                </button>
-            ) : (
-                <button onClick={handleDelete} className="btn btn-danger">
-                    Delete
-                </button>
-            )}
+            <button onClick={handleRemoveQuestion} className="btn btn-danger">
+                <i className="bi bi-x-circle"></i> Remove Question
+            </button>
             {showModal && (
                 <AnswerModal
                     show={showModal}
@@ -125,6 +130,7 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question, stepId, onRefresh
                     onRefresh={onRefresh}
                 />
             )}
+            {audioUrl && <audio src={audioUrl} controls />}
         </div>
     );
 };
